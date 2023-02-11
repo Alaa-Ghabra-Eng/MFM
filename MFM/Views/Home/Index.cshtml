@@ -1,0 +1,23 @@
+﻿@model MFM.Models.ViewModels.UserHomePageViewModel;
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome @ViewData["CurrentUserFirstName"]</h1>
+    <p>Start by selecting an option from the navigation bar up there</p>
+    <p>Here is an overview of your statistcs... </p>
+    <span class="alert alert-info">
+        <strong>Total In</strong> @Model._totalin
+    </span>
+      <span class="alert alert-info">
+        <strong>Total Out</strong> @Model._totalout
+    </span>
+    <span class="alert alert-success">
+        <strong>Max In</strong> @Model._MaxIn
+    </span>
+      <span class="alert alert-danger">
+        <strong>Max Out</strong> @Model._MaxOut
+    </span>
+</div>

@@ -1,0 +1,62 @@
+﻿@model MFM.Models.ViewModels.TransactionCreateViewModel
+
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //IEnumerable<Category> categories = ViewData["Categories"] as IEnumerable<Category>;
+    //IEnumerable<OuterParty> outerParties = ViewData["OuterParties"] as IEnumerable<OuterParty>;
+    
+}
+
+<h1>Add a new transaction</h1>
+
+<h4>Transaction Details</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for=@Model.Transaction.Amount class="control-label"></label>
+                <input asp-for=@Model.Transaction.Amount class="form-control" />
+                <span asp-validation-for=@Model.Transaction.Amount class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for=@Model.Transaction.Description class="control-label"></label>
+                <input asp-for=@Model.Transaction.Description class="form-control" />
+                <span asp-validation-for=@Model.Transaction.Description class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for=Category class="control-label"></label>
+                    <select asp-for=Category.Id class="form-control" aria-label="Select a category">
+                    <option selected>Please select a value</option>
+                   @foreach(Category Cat in @Model.Categories)
+                    {
+                    <option value=@Cat.Id> @Cat.Name </option>    
+                    }
+                </select>    
+            </div>
+
+            <div class="form-group">
+                <label asp-for=OuterParty class="control-label"></label>
+                <select asp-for=OuterParty.Id class="form-control" aria-label="Select a category">
+                    <option selected>Please select a value</option>
+                    @foreach (OuterParty Party in Model.OuterParties)
+                    {
+                        <option value=@Party.Id> @Party.Name </option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-dark" />
+            </div>
+        </form>
+      
+    </div>
+</div>
+<hr />
+<div>
+    <a class="btn btn-dark" asp-action="Get">Go to my tranactions</a>
+</div>
+

@@ -1,0 +1,67 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<MFM.Models.Transaction>
+
+
+@{
+    ViewData["Title"] = "All Transactions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form class="d-flex" action="/Transactions/GetAll" method="get">
+    <button class="btn btn-dark me-1" type="submit">Search</button>
+    <input class="form-control" type="search" placeholder="Search Transaction Description" aria-label="Search" name="searchTerm">
+</form>
+
+<hr />
+
+<h1>All Transactions Listing</h1>
+
+<p>
+    <a class="btn btn-dark" asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Created)
+            </th>
+            <th>
+                Created By 
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatorUser.UserName)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<hr />
+@Html.PagedListPager(Model, page=>Url.Action("GetAll", new { page, searchTerm=Context.Request.Query["searchTerm"] }), new X.PagedList.Web.Common.PagedListRenderOptions (){DisplayItemSliceAndTotal= true,ItemSliceAndTotalPosition = X.PagedList.Web.Common.ItemSliceAndTotalPosition.End,LiElementClasses = new string [] {"page-item"},PageClasses = new string []{"page-link"} })
