@@ -35,16 +35,16 @@ namespace MFM.Controllers
         public async Task<IActionResult> GetAll(int? page,string? searchTerm)
         {
             if (searchTerm != null)
-                return View(await _context.Transactions.Include(trx => trx.CreatorUser).Where(x => x.Description.Contains(searchTerm)).ToPagedListAsync<Transaction>( page ?? 1, 3));
+                return View(await _context.Transactions.Include(trx => trx.CreatorUser).Where(x => x.Description.Contains(searchTerm)).OrderByDescending(x => x.Created).ToPagedListAsync<Transaction>( page ?? 1, 3));
             else
-                return View(await _context.Transactions.Include(trx => trx.CreatorUser).ToPagedListAsync<Transaction>(page ?? 1, 3));
+                return View(await _context.Transactions.Include(trx => trx.CreatorUser).OrderByDescending(x=> x.Created).ToPagedListAsync<Transaction>(page ?? 1, 6));
         }
 
         // GET: Transactions Per User
         public async Task<IActionResult> Get(int ?page)
         {
             Console.WriteLine(_userServices.getCurrentUser().Id.ToString());
-            return View(await _context.Transactions.Include(trx => trx.Category).Include(trx=>trx.OuterParty).Where(trx => trx.CreatorUser.Id == _userServices.getCurrentUser().Id).ToPagedListAsync<Transaction>(page?? 1,5));
+            return View(await _context.Transactions.Include(trx => trx.Category).Include(trx=>trx.OuterParty).Where(trx => trx.CreatorUser.Id == _userServices.getCurrentUser().Id).OrderByDescending(x => x.Created).ToPagedListAsync<Transaction>(page?? 1,6));
         }
         // GET: Transactions/Details/5
         public async Task<IActionResult> Details(int? id)

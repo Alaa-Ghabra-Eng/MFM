@@ -2,6 +2,7 @@
 {
     public class UserHomePageViewModel
     {
+        public decimal? _balance;
         public decimal ? _totalin;
         public decimal ? _totalout;
         public decimal? _MaxIn;

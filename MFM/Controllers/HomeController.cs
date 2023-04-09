@@ -30,14 +30,20 @@ namespace MFM.Controllers
         }
 
         public IActionResult Index()
-        {   
-            UserHomePageViewModel userHomePageViewModel =  new UserHomePageViewModel();
-            userHomePageViewModel._totalin = _context.Transactions.Where(x => x.Amount >0).Sum(x => x.Amount);
-            userHomePageViewModel._totalout = _context.Transactions.Where(x => x.Amount < 0).Sum(x => x.Amount);
-            userHomePageViewModel._MaxIn = _context.Transactions.Where(x=> x.Amount > 0).Max(x => x.Amount);
-            userHomePageViewModel._MaxOut = _context.Transactions.Where(x => x.Amount < 0).Max(x => x.Amount);
-            ViewData["CurrentUserFirstName"] = _userServices.getCurrentUser().FirstName;      
-            return View(userHomePageViewModel);     
+        {
+            UserHomePageViewModel userHomePageViewModel = new UserHomePageViewModel();
+
+            userHomePageViewModel._totalin = _context.Transactions.Where(x => x.Amount > 0 && x.Created.Month == DateTime.Now.Month).Sum(x => x.Amount);
+            userHomePageViewModel._totalout = _context.Transactions.Where(x => x.Amount < 0 && x.Created.Month == DateTime.Now.Month).Sum(x => x.Amount);
+            userHomePageViewModel._balance = _context.Transactions.Sum(x => x.Amount);
+                     
+            var monthInTransactions = _context.Transactions.Where(x => x.Amount > 0 && x.Created.Month == DateTime.Now.Month);
+            var monthOutTransactions = _context.Transactions.Where(x => x.Amount < 0 && x.Created.Month == DateTime.Now.Month);
+            userHomePageViewModel._MaxIn = monthInTransactions.Any() ? monthInTransactions.Max(x => x.Amount) : 0;
+            userHomePageViewModel._MaxOut = monthOutTransactions.Any() ? monthOutTransactions.Min(x => x.Amount) :0 ;
+
+            ViewData["CurrentUserFirstName"] = _userServices.getCurrentUser().FirstName;
+            return View(userHomePageViewModel);
         }
 
         public IActionResult About()
@@ -57,21 +63,23 @@ namespace MFM.Controllers
 
             return userId;
         }
-  
-        public  ApplicationUser GetSessionUser()
+
+        public ApplicationUser GetSessionUser()
         {
             //Task<ApplicationUser> myTask = _userServices.getCurrentUser();
             return _userServices.getCurrentUser();
         }
-        public ApplicationUser test() {
+        public ApplicationUser test()
+        {
             //Task < ApplicationUser > myTask = _userServices.getCurrentUser();
             return _userServices.getCurrentUser();
 
-        
-       }
-        public string Version() {
 
-           return GetType().Assembly.GetName().Version.ToString();
+        }
+        public string Version()
+        {
+
+            return GetType().Assembly.GetName().Version.ToString();
 
         }
 
