@@ -54,7 +54,7 @@ namespace MFM.Controllers
                 return NotFound();
             }
 
-            var transaction = await _context.Transactions
+            var transaction = await _context.Transactions.Include(x => x.CreatorUser)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (transaction == null)
             {

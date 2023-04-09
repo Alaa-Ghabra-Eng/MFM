@@ -1,4 +1,4 @@
-﻿@model MFM.Models.OuterParty
+﻿@model MFM.Models.ViewModels.OuterPartyCreateViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -6,7 +6,6 @@
 }
 
 <h1>Create</h1>
-
 <h4>OuterParty</h4>
 <hr />
 <div class="row">
@@ -14,18 +13,29 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="outerParty.Name" class="control-label"></label>
+                <input asp-for="outerParty.Name" class="form-control" />
+                <span asp-validation-for="outerParty.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <label asp-for="outerParty.Description" class="control-label"></label>
+                <input asp-for="outerParty.Description" class="form-control" />
+                <span asp-validation-for="outerParty.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for=outerParty.Category class="control-label"></label>
+                <select asp-for=outerParty.Category.Id class="form-control" aria-label="Select a category">
+                    <option selected>Kindly select a category</option>
+                    @foreach (Category Cat in @Model.Categories)
+                    {
+                        <option value=@Cat.Id> @Cat.Name </option>
+                    }
+                </select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-dark" />
             </div>
+            
         </form>
     </div>
 </div>

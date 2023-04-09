@@ -9,7 +9,8 @@ using MFM.Data;
 using MFM.Models;
 using System.Drawing.Printing;
 using MFM.BusinessEngine;
-
+using MFM.Models.ViewModels;
+using X.PagedList;
 namespace MFM.Controllers
 {
     public class OuterPartiesController : Controller
@@ -24,9 +25,10 @@ namespace MFM.Controllers
         }
 
         // GET: OuterParties
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
-              return View(await _context.OuterParties.ToListAsync());
+            //return View(await _context.OuterParties.Include(party => party.Category).ToListAsync());
+            return View(await _context.OuterParties.Include(party => party.Category).ToPagedListAsync<OuterParty>(page ?? 1, 6));
         }
 
         // GET: OuterParties/Details/5
@@ -50,7 +52,9 @@ namespace MFM.Controllers
         // GET: OuterParties/Create
         public IActionResult Create()
         {
-            return View();
+            OuterPartyCreateViewModel model= new OuterPartyCreateViewModel();
+            model.Categories = _context.Categories.ToList();
+            return View(model);
         }
 
         // POST: OuterParties/Create
@@ -58,16 +62,17 @@ namespace MFM.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description")] OuterParty outerParty)
+        public async Task<IActionResult> Create(OuterPartyCreateViewModel model)
         {
             if (ModelState.IsValid)
             {
-                outerParty.CreatorUser = await _context.AppUsers.FirstAsync(x => x.Id == _userServices.getCurrentUserID());
-                _context.Add(outerParty);
+                model.outerParty.CreatorUser = await _context.AppUsers.FirstAsync(x => x.Id == _userServices.getCurrentUserID());
+                model.outerParty.Category = await _context.Categories.FirstAsync(x => x.Id == model.outerParty.Category.Id);
+                _context.Add(model.outerParty);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(outerParty);
+            return View();
         }
 
         // GET: OuterParties/Edit/5

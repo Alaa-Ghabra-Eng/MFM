@@ -7,6 +7,5 @@
         public decimal ? _totalout;
         public decimal? _MaxIn;
         public decimal? _MaxOut;
-
     }
 }
