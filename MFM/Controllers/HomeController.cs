@@ -31,16 +31,35 @@ namespace MFM.Controllers
 
         public IActionResult Index()
         {
+            
             UserHomePageViewModel userHomePageViewModel = new UserHomePageViewModel();
+            userHomePageViewModel._NotCurrentMonthMaxInFlag = false;
+            userHomePageViewModel._NotCurrentMonthMaxOutFlag = false;
 
             userHomePageViewModel._totalin = _context.Transactions.Where(x => x.Amount > 0 && x.Created.Month == DateTime.Now.Month).Sum(x => x.Amount);
             userHomePageViewModel._totalout = _context.Transactions.Where(x => x.Amount < 0 && x.Created.Month == DateTime.Now.Month).Sum(x => x.Amount);
             userHomePageViewModel._balance = _context.Transactions.Sum(x => x.Amount);
-                     
+
             var monthInTransactions = _context.Transactions.Where(x => x.Amount > 0 && x.Created.Month == DateTime.Now.Month);
             var monthOutTransactions = _context.Transactions.Where(x => x.Amount < 0 && x.Created.Month == DateTime.Now.Month);
             userHomePageViewModel._MaxIn = monthInTransactions.Any() ? monthInTransactions.Max(x => x.Amount) : 0;
-            userHomePageViewModel._MaxOut = monthOutTransactions.Any() ? monthOutTransactions.Min(x => x.Amount) :0 ;
+            userHomePageViewModel._MaxOut = monthOutTransactions.Any() ? monthOutTransactions.Min(x => x.Amount) : 0;
+            // show Max values from last month, if none are found for current month
+            if (userHomePageViewModel._MaxIn == 0)
+            {
+                //get them from last month and info user
+                monthInTransactions = _context.Transactions.Where( trx => trx.Created.Month == DateTime.Now.Month - 1 && trx.Amount > 0);
+                userHomePageViewModel._MaxIn = monthInTransactions.Any() ? monthInTransactions.Max(x => x.Amount) : 0;
+                userHomePageViewModel._NotCurrentMonthMaxInFlag = true;
+            }
+            //same goes for Max out
+            if (userHomePageViewModel._MaxOut == 0)
+            {
+                //get them from last month and info user
+                monthOutTransactions = _context.Transactions.Where(trx => trx.Created.Month == DateTime.Now.Month - 1 && trx.Amount < 0);
+                userHomePageViewModel._MaxOut = monthOutTransactions.Any() ? monthOutTransactions.Min(x => x.Amount) : 0;
+                userHomePageViewModel._NotCurrentMonthMaxOutFlag = true;
+            }
 
             ViewData["CurrentUserFirstName"] = _userServices.getCurrentUser().FirstName;
             return View(userHomePageViewModel);

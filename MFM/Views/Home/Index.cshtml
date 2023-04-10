@@ -22,12 +22,37 @@
         </>
     </div>
     <div class="row">
-        <span class="text-danger">Max amounts this month</span>
-        <span class="alert alert-success">
-            <strong>Max In</strong> @Model._MaxIn
-        </span>
-        <span class="alert alert-danger">
-            <strong>Max Out</strong> @Model._MaxOut
-        </span>
+        @if (!(Boolean)Model._NotCurrentMonthMaxInFlag && !(Boolean)Model._NotCurrentMonthMaxOutFlag)
+        {
+            <span class="text-info">Max amounts from this month</span>
+        }
+        else
+        {
+            <span class="text-danger">Max amounts from last month</span>
+        }
+        @if (!(Boolean)Model._NotCurrentMonthMaxInFlag)
+        {
+            <span class="alert alert-success">
+                <strong>Max In</strong> @Model._MaxIn
+            </span>
+        }
+        else
+        {
+            <span class="alert alert-danger">
+                <strong>Max In | last month</strong> @Model._MaxIn
+            </span>
+        }
+        @if (!(Boolean)Model._NotCurrentMonthMaxOutFlag)
+        {
+            <span class="alert alert-success">
+                <strong>Max Out</strong> @Model._MaxOut
+            </span>
+        }
+        else
+        {
+            <span class="alert alert-danger">
+                <strong>Max Out | last month</strong> @Model._MaxOut
+            </span>
+        }
     </div>
 </div>

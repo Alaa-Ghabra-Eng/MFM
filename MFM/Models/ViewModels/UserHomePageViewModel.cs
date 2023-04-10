@@ -7,5 +7,7 @@
         public decimal ? _totalout;
         public decimal? _MaxIn;
         public decimal? _MaxOut;
+        public Boolean? _NotCurrentMonthMaxInFlag;
+        public Boolean? _NotCurrentMonthMaxOutFlag;  
     }
 }
