@@ -1,4 +1,6 @@
-﻿@model IEnumerable<MFM.Models.Category>
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<MFM.Models.Category>
 
 @{
     ViewData["Title"] = "Index";
@@ -14,10 +16,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.First().Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.First().Description)
             </th>
             <th></th>
         </tr>
@@ -40,3 +42,6 @@
 }
     </tbody>
 </table>
+<hr />
+
+@Html.PagedListPager(Model, page=>Url.Action("Index", new {page}), new X.PagedList.Web.Common.PagedListRenderOptions (){LiElementClasses = new string [] {"page-item"},PageClasses = new string[] { "page-link" },DisplayItemSliceAndTotal= true,ItemSliceAndTotalPosition=X.PagedList.Web.Common.ItemSliceAndTotalPosition.End})

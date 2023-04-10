@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using MFM.Data;
 using MFM.Models;
 using MFM.BusinessEngine;
+using X.PagedList;
 
 namespace MFM.Controllers
 {
@@ -23,9 +24,9 @@ namespace MFM.Controllers
         }
 
         // GET: Categories
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
-              return View(await _context.Categories.ToListAsync());
+              return View(await _context.Categories.OrderByDescending(category => category.Id).ToPagedListAsync<Category>(page?? 1 , 6 ));
         }
 
         // GET: Categories/Details/5
