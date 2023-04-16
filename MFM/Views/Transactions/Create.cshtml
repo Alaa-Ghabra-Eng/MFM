@@ -21,6 +21,9 @@
                 <label asp-for=@Model.Transaction.Amount class="control-label"></label>
                 <input asp-for=@Model.Transaction.Amount class="form-control" />
                 <span asp-validation-for=@Model.Transaction.Amount class="text-danger"></span>
+                <label asp-for=@Model.Transaction.IsIncome class="control-label"></label>
+                <input asp-for=@Model.Transaction.IsIncome class="form-check-input" />
+                <span asp-validation-for=@Model.Transaction.IsIncome class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for=@Model.Transaction.Description class="control-label"></label>
@@ -45,6 +48,17 @@
                     @foreach (OuterParty Party in Model.OuterParties)
                     {
                         <option value=@Party.Id> @Party.Name </option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for=Budget class="control-label"></label>
+                <select asp-for=Budget.Id class="form-control" aria-label="Select a budget">
+                    <option selected>Not related to a budget</option>
+                    @foreach (Budget budget in Model.Budgets)
+                    {
+                        <option value=@budget.Id> @budget.Name </option>
                     }
                 </select>
             </div>

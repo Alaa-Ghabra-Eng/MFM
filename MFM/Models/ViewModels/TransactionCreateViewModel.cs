@@ -19,6 +19,8 @@ namespace MFM.Models.ViewModels
         public Category Category { get; set; }  
         public OuterParty OuterParty { get; set; }  
         public IEnumerable<OuterParty> OuterParties { get; set; } 
-        public Transaction Transaction { get; set; }   
+        public Transaction Transaction { get; set; }
+        public IEnumerable<Budget> Budgets { get; set; }
+        public Budget Budget { get; set; }
     }
 }
