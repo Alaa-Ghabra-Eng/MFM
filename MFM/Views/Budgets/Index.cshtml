@@ -1,29 +1,28 @@
-﻿@using X.PagedList
-@using X.PagedList.Mvc.Core
-
-@model IPagedList<MFM.Models.OuterParty>
+﻿@model IEnumerable<MFM.Models.Budget>
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-dark">Create New</a>
+    <a asp-action="Create" class="btn btn-dark">Define a new budget to manage your expenses</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.First().Name)
+                @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.First().Description)
+                @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                Category 
+                @Html.DisplayNameFor(model => model.CurrentFunds)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AllocatedFunds)
             </th>
             <th></th>
         </tr>
@@ -37,9 +36,12 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Category.Name)
-                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CurrentFunds)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AllocatedFunds)
+            </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
@@ -49,6 +51,3 @@
 }
     </tbody>
 </table>
-
-<hr />
-@Html.PagedListPager(Model, page=>Url.Action("Index", new {page}), new X.PagedList.Web.Common.PagedListRenderOptions (){LiElementClasses = new string [] {"page-item"},PageClasses = new string[] { "page-link" },DisplayItemSliceAndTotal= true,ItemSliceAndTotalPosition=X.PagedList.Web.Common.ItemSliceAndTotalPosition.End})

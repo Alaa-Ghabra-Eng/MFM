@@ -4,6 +4,7 @@ using MFM.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MFM.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230410221307_added budgets 3")]
+    partial class addedbudgets3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -104,7 +106,7 @@ namespace MFM.Data.Migrations
                     b.Property<decimal>("AllocatedFunds")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("CreatorUserId")
+                    b.Property<string>("CreaterUserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("CurrentFunds")
@@ -118,7 +120,7 @@ namespace MFM.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatorUserId");
+                    b.HasIndex("CreaterUserId");
 
                     b.ToTable("Budgets");
                 });
@@ -352,11 +354,11 @@ namespace MFM.Data.Migrations
 
             modelBuilder.Entity("MFM.Models.Budget", b =>
                 {
-                    b.HasOne("MFM.Models.ApplicationUser", "CreatorUser")
+                    b.HasOne("MFM.Models.ApplicationUser", "CreaterUser")
                         .WithMany()
-                        .HasForeignKey("CreatorUserId");
+                        .HasForeignKey("CreaterUserId");
 
-                    b.Navigation("CreatorUser");
+                    b.Navigation("CreaterUser");
                 });
 
             modelBuilder.Entity("MFM.Models.Category", b =>

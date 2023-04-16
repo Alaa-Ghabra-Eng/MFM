@@ -7,98 +7,93 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MFM.Data;
 using MFM.Models;
-using System.Drawing.Printing;
 using MFM.BusinessEngine;
-using MFM.Models.ViewModels;
-using X.PagedList;
+using MFM.Data.Migrations;
+
 namespace MFM.Controllers
 {
-    public class OuterPartiesController : Controller
+    public class BudgetsController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly IUserServices _userServices;
 
-        public OuterPartiesController(ApplicationDbContext context, IUserServices userServices)
+        public BudgetsController(ApplicationDbContext context, IUserServices userServices)
         {
             _context = context;
             _userServices = userServices;
         }
 
-        // GET: OuterParties
-        public async Task<IActionResult> Index(int? page)
+        // GET: Budgets
+        public async Task<IActionResult> Index()
         {
-            //return View(await _context.OuterParties.Include(party => party.Category).ToListAsync());
-            return View(await _context.OuterParties.Include(party => party.Category).OrderByDescending(party=> party.Id).ToPagedListAsync<OuterParty>(page ?? 1, 6));
+              return View(await _context.Budgets.ToListAsync());
         }
 
-        // GET: OuterParties/Details/5
+        // GET: Budgets/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.OuterParties == null)
+            if (id == null || _context.Budgets == null)
             {
                 return NotFound();
             }
 
-            var outerParty = await _context.OuterParties
+            var budget = await _context.Budgets.Include(budget => budget.CreatorUser )
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (outerParty == null)
+            if (budget == null)
             {
                 return NotFound();
             }
 
-            return View(outerParty);
+            return View(budget);
         }
 
-        // GET: OuterParties/Create
+        // GET: Budgets/Create
         public IActionResult Create()
         {
-            OuterPartyCreateViewModel model= new OuterPartyCreateViewModel();
-            model.Categories = _context.Categories.ToList();
-            return View(model);
-        }
-
-        // POST: OuterParties/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(OuterPartyCreateViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                model.outerParty.CreatorUser = await _context.AppUsers.FirstAsync(x => x.Id == _userServices.getCurrentUserID());
-                model.outerParty.Category = await _context.Categories.FirstAsync(x => x.Id == model.outerParty.Category.Id);
-                _context.Add(model.outerParty);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
             return View();
         }
 
-        // GET: OuterParties/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.OuterParties == null)
-            {
-                return NotFound();
-            }
-
-            var outerParty = await _context.OuterParties.FindAsync(id);
-            if (outerParty == null)
-            {
-                return NotFound();
-            }
-            return View(outerParty);
-        }
-
-        // POST: OuterParties/Edit/5
+        // POST: Budgets/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] OuterParty outerParty)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,CurrentFunds,AllocatedFunds")] Budget budget)
         {
-            if (id != outerParty.Id)
+            if (ModelState.IsValid)
+            {
+                budget.CreatorUser = _context.AppUsers.FirstOrDefault(AppUser => AppUser.Id == _userServices.getCurrentUserID());
+                _context.Add(budget);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(budget);
+        }
+
+        // GET: Budgets/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null || _context.Budgets == null)
+            {
+                return NotFound();
+            }
+
+            var budget = await _context.Budgets.FindAsync(id);
+            if (budget == null)
+            {
+                return NotFound();
+            }
+            return View(budget);
+        }
+
+        // POST: Budgets/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,CurrentFunds,AllocatedFunds")] Budget budget)
+        {
+            if (id != budget.Id)
             {
                 return NotFound();
             }
@@ -107,12 +102,12 @@ namespace MFM.Controllers
             {
                 try
                 {
-                    _context.Update(outerParty);
+                    _context.Update(budget);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OuterPartyExists(outerParty.Id))
+                    if (!BudgetExists(budget.Id))
                     {
                         return NotFound();
                     }
@@ -123,49 +118,49 @@ namespace MFM.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(outerParty);
+            return View(budget);
         }
 
-        // GET: OuterParties/Delete/5
+        // GET: Budgets/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.OuterParties == null)
+            if (id == null || _context.Budgets == null)
             {
                 return NotFound();
             }
 
-            var outerParty = await _context.OuterParties
+            var budget = await _context.Budgets
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (outerParty == null)
+            if (budget == null)
             {
                 return NotFound();
             }
 
-            return View(outerParty);
+            return View(budget);
         }
 
-        // POST: OuterParties/Delete/5
+        // POST: Budgets/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.OuterParties == null)
+            if (_context.Budgets == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.OuterParties'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Budgets'  is null.");
             }
-            var outerParty = await _context.OuterParties.FindAsync(id);
-            if (outerParty != null)
+            var budget = await _context.Budgets.FindAsync(id);
+            if (budget != null)
             {
-                _context.OuterParties.Remove(outerParty);
+                _context.Budgets.Remove(budget);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool OuterPartyExists(int id)
+        private bool BudgetExists(int id)
         {
-          return _context.OuterParties.Any(e => e.Id == id);
+          return _context.Budgets.Any(e => e.Id == id);
         }
     }
 }
