@@ -63,6 +63,8 @@ namespace MFM.Controllers
             if (ModelState.IsValid)
             {
                 budget.CreatorUser = _context.AppUsers.FirstOrDefault(AppUser => AppUser.Id == _userServices.getCurrentUserID());
+                budget.Created = DateTime.Now;
+                budget.CurrentFunds = budget.AllocatedFunds;
                 _context.Add(budget);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

@@ -75,7 +75,7 @@ namespace MFM.Controllers
             TransactionCreateViewModel trxView = new TransactionCreateViewModel();
             trxView.Categories = await _context.Categories.ToListAsync();
             trxView.OuterParties = await _context.OuterParties.ToListAsync();
-            trxView.Budgets = await _context.Budgets.ToListAsync();
+            trxView.Budgets = await _context.Budgets.Where(budget => budget.Created >= DateTime.Now.AddDays(-30)).ToListAsync();
             return View(trxView);
         }
         [HttpPost]
