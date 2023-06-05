@@ -27,11 +27,14 @@
                 <input asp-for="AllocatedFunds" class="form-control" />
                 <span asp-validation-for="AllocatedFunds" class="text-danger"></span>
             </div>
-             <div class="form-group">
-                <label asp-for="ExpiresAt" class="control-label"></label>
-                <input asp-for="ExpiresAt" class="form-control"  />
-                <span asp-validation-for="ExpiresAt" class="text-danger"></span>
-                If not specified. this will expire after one month
+            <div class="form-group">
+                <label asp-for="IsActive" class="control-label">Enabled?</label>
+                <input asp-for="IsActive" class="form-check-input" />
+            </div>
+            <div class="form-group">
+                <label asp-for="IsRenewable" class="control-label">Renewable?</label>
+                <input asp-for="IsRenewable" class="form-check-input" />
+                which means its fund is reset each month
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-dark" />
@@ -45,5 +48,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

@@ -18,6 +18,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.Description)
             </th>
+               <th>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+               <th>
+                @Html.DisplayNameFor(model => model.IsRenewable)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.CurrentFunds)
             </th>
@@ -27,8 +33,8 @@
             <th>
                 @Html.DisplayNameFor(model => model.FundPercentage)
             </th>
-              <th>
-                @Html.DisplayNameFor(model => model.ExpiresAt)
+            <th>
+                @Html.DisplayNameFor(model => model.LastCurrentFunds)
             </th>
             <th></th>
         </tr>
@@ -44,6 +50,12 @@
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.IsActive)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsRenewable)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.CurrentFunds)
                 </td>
                 <td>
@@ -52,8 +64,9 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.FundPercentage)
                 </td>
+
                 <td>
-                    @Html.DisplayFor(modelItem => item.ExpiresAt)
+                    @Html.DisplayFor(modelItem => item.LastCurrentFunds)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-dark">Edit</a> |

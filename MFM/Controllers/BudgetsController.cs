@@ -58,13 +58,14 @@ namespace MFM.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,CurrentFunds,AllocatedFunds")] Budget budget)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,CurrentFunds,AllocatedFunds,IsActive,IsRenewable")] Budget budget)
         {
             if (ModelState.IsValid)
             {
                 budget.CreatorUser = _context.AppUsers.FirstOrDefault(AppUser => AppUser.Id == _userServices.getCurrentUserID());
                 budget.Created = DateTime.Now;
                 budget.CurrentFunds = budget.AllocatedFunds;
+                budget.ExpiresAt = DateTime.Now.AddDays(30); // Budgets are renewed on a monthly basis
                 _context.Add(budget);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

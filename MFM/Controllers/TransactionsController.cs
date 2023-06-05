@@ -75,13 +75,14 @@ namespace MFM.Controllers
             TransactionCreateViewModel trxView = new TransactionCreateViewModel();
             trxView.Categories = await _context.Categories.ToListAsync();
             trxView.OuterParties = await _context.OuterParties.ToListAsync();
-            trxView.Budgets = await _context.Budgets.Where(budget => budget.Created >= DateTime.Now.AddDays(-30)).ToListAsync();
+            trxView.Budgets = await _context.Budgets.Where(budget => budget.IsActive).ToListAsync();
             return View(trxView);
         }
         [HttpPost]
-
         public async Task<IActionResult> Create(TransactionCreateViewModel trxView)
         {
+            Boolean HasBugetsToUpdate = false; // if set to true, then we have a budget to renew, and we must redirect the user to budgets page to 
+            //check his/her budget allocated funds
             Transaction NewTransaction = new();
             NewTransaction = trxView.Transaction;
             //Check direction and set value sign accordingly 
@@ -101,6 +102,14 @@ namespace MFM.Controllers
                 {
                     NewTransaction.budget = selectedBudget; // link budget
                     selectedBudget.CurrentFunds -= Math.Abs(NewTransaction.Amount); // process budget funds.
+                    //Process Renewable Budget
+                    if (selectedBudget.IsRenewable && (selectedBudget.ExpiresAt < DateTime.Now.AddDays(-30))) // a month has passed for this budget
+                    {
+                        selectedBudget.LastCurrentFunds = selectedBudget.CurrentFunds; //Save Last Current Fund
+                        selectedBudget.CurrentFunds = selectedBudget.AllocatedFunds;                       
+                        selectedBudget.ExpiresAt = DateTime.Now.AddDays(30); // updated Creation Date
+                        HasBugetsToUpdate = true;
+                    }
                     _context.Update(selectedBudget);
                     await _context.SaveChangesAsync();
                 }
@@ -118,7 +127,11 @@ namespace MFM.Controllers
             //Console.WriteLine("-------End of Debug-------");
 
             await _context.SaveChangesAsync();
+            if(!HasBugetsToUpdate) // No Budgets to update / redirect to normal page
             return RedirectToAction("Create");
+            else
+            return RedirectToAction("Index","Budgets");
+
         }
 
         // POST: Transactions/Create
