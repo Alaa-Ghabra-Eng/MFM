@@ -2,9 +2,9 @@ Hellow friends,
 
 Greetings,
 
-I'm a junior .Net developer and this is my first personal project. 'MFM' stands for My Financial Manager and it's a .Net based project comprising a Restful API to serve the application's main functions and a Web Interface build using Blazor
-that consumes the aformentiond  Web API. Please leave your comments and feel free to use the project as it suits you. 
+I'm a junior .Net developer and this is my first personal project. 'MFM' stands for My Financial Manager which is a simple budget manager built with ASP.NET Core framework.
+The project serves as a simple personal budget manager with the abbility to add and update transactions in addition to the possiblity of categorizing the transactions and calculating expenses and income. 
+This project is no longer maintained since I'm building a new project with the same functions but using a different stucture. the new stucture is way more dynamic since it comprises a Restful API and a seperate web application that conusmes the services. 
 
-Kindly notice that the current code represents an ASP.NET Core web application and It is functional at the moment but I'm currently refactoring the project according to the new structure I mentioned earlier. 
 
 Thank you. 
